@@ -1,30 +1,52 @@
 #!/usr/bin/python3
 """
-returns True if the string is valid UTF-8 encoding
+Define validUTF8(data) function that validates whether a
+string of ints represents a valid UTF-8 encoding.
 """
+from itertools import takewhile
+
+
+def int_to_bits(nums):
+    """
+    Helper function
+    Convert ints to bits
+    """
+    for num in nums:
+        bits = []
+        mask = 1 << 8  # cause we have 8 bits per byte. adds up to (11111111)
+        while mask:
+            mask >>= 1
+            bits.append(bool(num & mask))
+        yield bits
 
 
 def validUTF8(data):
     """
-    Validate UTF-8
+    Takes a list of ints and returns true if the list is
+    a valid UTF-8 encoding, else returns false
+    Args:
+        data : List of ints representing possible UTF-8 encoding
+    Return:
+        bool : True or False
     """
-    for i in range(len(data)):
-        if data[i] >> 7 == 0:
+    bits = int_to_bits(data)
+    for byte in bits:
+        # if single byte char, then valid. continue
+        if byte[0] == 0:
             continue
-        elif data[i] >> 5 == 0b110:
-            if i + 1 >= len(data) or data[i + 1] >> 6 != 0b10:
-                return False
-            i += 1
-        elif data[i] >> 4 == 0b1110:
-            if i + 2 >= len(data) or data[i + 1] >> 6 != 0b10 or \
-                    data[i + 2] >> 6 != 0b10:
-                return False
-            i += 2
-        elif data[i] >> 3 == 0b11110:
-            if i + 3 >= len(data) or data[i + 1] >> 6 != 0b10 or \
-                    data[i + 2] >> 6 != 0b10 or data[i + 3] >> 6 != 0b10:
-                return False
-            i += 3
-        else:
+
+        # if here, byte is multi-byte char
+        ones = sum(takewhile(bool, byte))
+        if ones <= 1:
             return False
+        if ones >= 4:  # UTF-8 can be 1 to 4 bytes long
+            return False
+
+        for _ in range(ones - 1):
+            try:
+                byte = next(bits)
+            except StopIteration:
+                return False
+            if byte[0:2] != [1, 0]:
+                return False
     return True
