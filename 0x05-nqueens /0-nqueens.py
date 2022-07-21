@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-N-Queens puzzle is a board game played by two players,
+N-Queens puzzle is  a board game played by two players,
 """
 import sys
 
