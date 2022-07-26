@@ -1,8 +1,8 @@
 #!/usr/bin/node
-// Get the Star Wars characters from the API
-
+/**
+ * Get the Star Wars characters from the API
+ *  */ 
 const request = require('request');
-
 const filmId = process.argv[2];
 let characters;
 const url = `https://swapi-api.hbtn.io/api/films/${filmId}`;
