@@ -1,6 +1,6 @@
 #!/usr/bin/node
 /**
- * Star wars api 
+ * Star wars api
  * Script that prints all characters of a Star Wars movie:
  */
 const request = require('request');
@@ -19,13 +19,13 @@ const movieCharacters = new Promise((resolve, reject) => {
 );
 
 movieCharacters.then((characters) => {
-  for (let i = 0; i < characters.length; i++) {
-    request(characters[i], (error, response, body) => {
+  // console.log(characters);
+  characters.forEach(element => {
+    request(element, (error, response, body) => {
       if (error) console.log(error);
-      // console.log(response.statusCode);
       console.log(JSON.parse(body).name);
     });
-  }
+  });
 }
 ).catch((error) => {
   console.log(error);
