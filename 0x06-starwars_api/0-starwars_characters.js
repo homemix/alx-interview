@@ -1,13 +1,13 @@
 #!/usr/bin/node
 /**
  * Get the Star Wars characters from the API
- *  */ 
+ *  */
 const request = require('request');
 const filmId = process.argv[2];
 let characters;
 if (!filmId || isNaN(filmId)) {
-    process.exit(1);
-  }
+  process.exit(1);
+}
 const url = `https://swapi-api.hbtn.io/api/films/${filmId}`;
 
 request(url, (error, response, body) => {
