@@ -3,7 +3,6 @@
  * Star wars api
  * Script that prints all characters of a Star Wars movie:
  */
-let characters = [];
 const request = require('request');
 const filmId = process.argv[2];
 if (!filmId || isNaN(filmId)) {
@@ -11,13 +10,15 @@ if (!filmId || isNaN(filmId)) {
 }
 const url = `https://swapi-api.hbtn.io/api/films/${filmId}`;
 
-request(url, (error, response, body) => {
-  // Printing the error if occurred
-  if (error) console.log(error);
+const movieCharacters = new Promise((resolve, reject) => {
+  request(url, (error, response, body) => {
+    if (error) reject(error);
+    resolve(JSON.parse(body).characters);
+  });
+}
+);
 
-  // Printing body
-  characters = JSON.parse(body).characters;
-
+movieCharacters.then((characters) => {
   for (let i = 0; i < characters.length; i++) {
     request(characters[i], (error, response, body) => {
       if (error) console.log(error);
@@ -25,4 +26,8 @@ request(url, (error, response, body) => {
       console.log(JSON.parse(body).name);
     });
   }
-});
+}
+).catch((error) => {
+  console.log(error);
+}
+);
