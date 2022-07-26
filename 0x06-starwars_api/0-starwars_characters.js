@@ -1,10 +1,12 @@
 #!/usr/bin/node
+
 /**
- * Get the Star Wars characters from the API
- *  */
+ * Star wars api
+ * Script that prints all characters of a Star Wars movie:
+ */
+let characters = [];
 const request = require('request');
 const filmId = process.argv[2];
-let characters;
 if (!filmId || isNaN(filmId)) {
   process.exit(1);
 }
