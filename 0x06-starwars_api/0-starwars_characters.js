@@ -5,6 +5,9 @@
 const request = require('request');
 const filmId = process.argv[2];
 let characters;
+if (!filmId || isNaN(filmId)) {
+    process.exit(1);
+  }
 const url = `https://swapi-api.hbtn.io/api/films/${filmId}`;
 
 request(url, (error, response, body) => {
