@@ -10,24 +10,36 @@ if (!filmId || isNaN(filmId)) {
 }
 const url = `https://swapi-api.hbtn.io/api/films/${filmId}`;
 
-const movieCharacters = new Promise((resolve, reject) => {
-  request(url, (error, response, body) => {
-    if (error) reject(error);
-    resolve(JSON.parse(body).characters);
-  });
-}
-);
+request(url, (error, response, body) => {
+  if (error) {
+    console.log(error);
+    return;
+  }
+  const respPromises = [];
 
-movieCharacters.then((characters) => {
-  // console.log(characters);
-  characters.forEach(element => {
-    request(element, (error, response, body) => {
-      if (error) console.log(error);
-      console.log(JSON.parse(body).name);
+  const json = JSON.parse(body);
+  const characters = json.characters;
+
+  characters.forEach((character) => {
+    const url = character;
+    const promise = new Promise((resolve, reject) => {
+      request(url, (error, response, body) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        const json = JSON.parse(body);
+        resolve(json.name);
+      });
     });
+    respPromises.push(promise);
   });
-}
-).catch((error) => {
-  console.log(error);
+  Promise.all(respPromises).then((values) => {
+    values.forEach((value) => {
+      console.log(value);
+    });
+  }).catch((error) => {
+    console.log(error);
+  });
 }
 );
