@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+A method for returning change for a given total
+"""
+
 
 def makeChange(coins, total):
     """
